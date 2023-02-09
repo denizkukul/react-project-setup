@@ -3,6 +3,7 @@ const isEnvProduction = process.env.mode === 'production';
 
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 module.exports = {
   mode: isEnvDevelopment ? 'development' : isEnvProduction && 'production',
@@ -18,7 +19,7 @@ module.exports = {
     path: path.resolve(__dirname, '..', 'build'),
     filename: '[name][contenthash].js',
     pathinfo: isEnvDevelopment,
-    filename: isEnvProduction ? 'js/[name].[contenthash:8].js' : isEnvDevelopment && 'js/bundle.js',
+    filename: isEnvProduction ? 'js/[name].[contenthash:8].js' : isEnvDevelopment && 'js/[name].js',
     chunkFilename: isEnvProduction ? 'js/[name].[contenthash:8].chunk.js' : isEnvDevelopment && 'js/[name].chunk.js',
     assetModuleFilename: 'assets/[name].[hash][ext]',
     clean: true
@@ -26,11 +27,38 @@ module.exports = {
 
   devtool: isEnvProduction ? 'source-map' : isEnvDevelopment && 'cheap-module-source-map',
 
+  module: {
+    rules: [
+      {
+        test: /\.css$/,
+        use: [
+          {
+            loader: isEnvDevelopment ? 'style-loader' : isEnvProduction && MiniCssExtractPlugin.loader,
+          },
+          {
+            loader: 'css-loader',
+            options: {
+              sourceMap: true,
+              // sideEffects: true
+            },
+          },
+          // {
+          //   loader: 'postcss-loader',
+          //   options: {
+          //     sourceMap: true,
+          //     sideEffects: true
+          //   },
+          // }
+        ]
+      },
+    ]
+  },
+
   plugins: [
     new HtmlWebpackPlugin({
       filename: 'index.html',
       template: path.resolve(__dirname, '..', 'src', 'index.html'),
-      favicon: path.resolve(__dirname, '..', 'public', 'favicon.ico'),
+      favicon: path.resolve(__dirname, '..', 'public', 'favicon.svg'),
       // minify: {
       //   removeComments: true,
       //   collapseWhitespace: true,
@@ -43,8 +71,13 @@ module.exports = {
       //   minifyCSS: true,
       //   minifyURLs: true,
       // },
+    }),
+    isEnvProduction &&
+    new MiniCssExtractPlugin({
+      filename: isEnvProduction ? 'css/[name].[contenthash:8].css' : isEnvDevelopment && 'css/[name].css',
+      chunkFilename: isEnvProduction ? 'css/[name].[contenthash:8].chunk.css' : isEnvDevelopment && 'css/[name].chunk.css'
     })
-  ],
+  ].filter(Boolean),
 
   devServer: {
     static: {
