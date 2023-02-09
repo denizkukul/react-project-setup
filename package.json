@@ -2,8 +2,9 @@
   "name": "webpack-project-setup",
   "main": "index.js",
   "scripts": {
-    "dev": "webpack --mode none --config config/webpack.config.js",
-    "build": "webpack --mode none --config config/webpack.config.js"
+    "dev": "mode=development webpack serve --config config/webpack.config.js",
+    "build": "mode=production webpack --config config/webpack.config.js",
+    "build-dev": "mode=development webpack --config config/webpack.config.js"
   },
   "devDependencies": {
     "html-webpack-plugin": "^5.5.0",

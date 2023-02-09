@@ -1,3 +1,3 @@
-import script from './files/somefile.js';
-console.log('index');
-script();
+import createHeader from "./createHeader";
+const body = document.querySelector('body');
+createHeader(body);

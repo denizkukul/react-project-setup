@@ -1,1 +1,0 @@
-export default script = console.log('somefile.js');
