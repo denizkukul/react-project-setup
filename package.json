@@ -2,17 +2,31 @@
   "name": "webpack-project-setup",
   "main": "index.js",
   "scripts": {
-    "dev": "mode=development webpack serve --config config/webpack.config.js",
-    "build": "mode=production webpack --config config/webpack.config.js",
-    "build-dev": "mode=development webpack --config config/webpack.config.js"
+    "dev": "NODE_ENV=development webpack serve --config config/webpack.config.js",
+    "build": "NODE_ENV=production webpack --config config/webpack.config.js",
+    "build-dev": "NODE_ENV=development webpack --config config/webpack.config.js"
   },
   "devDependencies": {
+    "browserslist": "^4.21.5",
     "css-loader": "^6.7.3",
     "html-webpack-plugin": "^5.5.0",
     "mini-css-extract-plugin": "^2.7.2",
+    "postcss-loader": "^7.0.2",
+    "postcss-preset-env": "^8.0.1",
     "style-loader": "^3.3.1",
     "webpack": "^5.75.0",
     "webpack-cli": "^5.0.1",
     "webpack-dev-server": "^4.11.1"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version"
+    ]
   }
 }

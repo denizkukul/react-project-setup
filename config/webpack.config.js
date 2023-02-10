@@ -1,5 +1,5 @@
-const isEnvDevelopment = process.env.mode === 'development';
-const isEnvProduction = process.env.mode === 'production';
+const isEnvDevelopment = process.env.NODE_ENV === 'development';
+const isEnvProduction = process.env.NODE_ENV === 'production';
 
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
@@ -34,21 +34,24 @@ module.exports = {
         use: [
           {
             loader: isEnvDevelopment ? 'style-loader' : isEnvProduction && MiniCssExtractPlugin.loader,
+            // options: { injectType: "linkTag" }
           },
           {
             loader: 'css-loader',
             options: {
               sourceMap: true,
-              // sideEffects: true
+              // exportType: 'css-style-sheet'
             },
           },
-          // {
-          //   loader: 'postcss-loader',
-          //   options: {
-          //     sourceMap: true,
-          //     sideEffects: true
-          //   },
-          // }
+          {
+            loader: 'postcss-loader',
+            options: {
+              sourceMap: true,
+              postcssOptions: {
+                config: path.resolve(__dirname, 'postcss.config.js'),
+              }
+            },
+          }
         ]
       },
     ]
