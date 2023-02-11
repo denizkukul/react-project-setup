@@ -2,6 +2,7 @@ const isEnvDevelopment = process.env.NODE_ENV === 'development';
 const isEnvProduction = process.env.NODE_ENV === 'production';
 
 const path = require('path');
+const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
@@ -31,7 +32,7 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.js$/,
+        test: /\.(js|ts)$/,
         loader: 'babel-loader',
         options: require(path.resolve(__dirname, 'babel.config.js'))
       },
@@ -61,6 +62,10 @@ module.exports = {
     ]
   },
 
+  resolve: {
+    extensions: ['.js', '.ts']
+  },
+
   plugins: [
     new HtmlWebpackPlugin({
       filename: 'index.html',
@@ -83,11 +88,15 @@ module.exports = {
     new MiniCssExtractPlugin({
       filename: isEnvProduction ? 'css/[name].[contenthash:8].css' : isEnvDevelopment && 'css/[name].css',
       chunkFilename: isEnvProduction ? 'css/[name].[contenthash:8].chunk.css' : isEnvDevelopment && 'css/[name].chunk.css'
-    })
+    }),
+    isEnvDevelopment &&
+    new ForkTsCheckerWebpackPlugin()
   ].filter(Boolean),
 
   optimization: {
+    minimize: false,
     minimizer: [
+      `...`,
       new CssMinimizerPlugin(),
     ]
   },
@@ -96,7 +105,7 @@ module.exports = {
     static: {
       directory: path.resolve(__dirname, 'dist')
     },
-    port: 3000,
+    port: 3001,
     open: true,
     hot: true,
     compress: true,
