@@ -4,6 +4,7 @@ const isEnvProduction = process.env.NODE_ENV === 'production';
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
 
 module.exports = {
   mode: isEnvDevelopment ? 'development' : isEnvProduction && 'production',
@@ -30,17 +31,20 @@ module.exports = {
   module: {
     rules: [
       {
+        test: /\.js$/,
+        loader: 'babel-loader',
+        options: require(path.resolve(__dirname, 'babel.config.js'))
+      },
+      {
         test: /\.css$/,
         use: [
           {
             loader: isEnvDevelopment ? 'style-loader' : isEnvProduction && MiniCssExtractPlugin.loader,
-            // options: { injectType: "linkTag" }
           },
           {
             loader: 'css-loader',
             options: {
               sourceMap: true,
-              // exportType: 'css-style-sheet'
             },
           },
           {
@@ -81,6 +85,12 @@ module.exports = {
       chunkFilename: isEnvProduction ? 'css/[name].[contenthash:8].chunk.css' : isEnvDevelopment && 'css/[name].chunk.css'
     })
   ].filter(Boolean),
+
+  optimization: {
+    minimizer: [
+      new CssMinimizerPlugin(),
+    ]
+  },
 
   devServer: {
     static: {
