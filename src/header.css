@@ -2,12 +2,4 @@ header {
     display: grid;
     background-color: antiquewhite;
     font-family: system-ui;
-    transition: all 1s;
-}
-
-.header {
-    display: grid;
-    background-color: antiquewhite;
-    transition: all 1s;
-    font-family: system-ui;
 }

@@ -59,6 +59,10 @@ module.exports = {
           }
         ]
       },
+      {
+        test: [/\.bmp$/, /\.gif$/, /\.jpe?g$/, /\.png$/, /\.svg$/],
+        type: 'asset/resource'
+      }
     ]
   },
 
