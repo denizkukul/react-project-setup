@@ -10,7 +10,6 @@
     "@babel/core": "^7.20.12",
     "@babel/preset-env": "^7.20.2",
     "@babel/preset-typescript": "^7.18.6",
-    "@fullhuman/postcss-purgecss": "^5.0.0",
     "babel-loader": "^9.1.2",
     "browserslist": "^4.21.5",
     "css-loader": "^6.7.3",
@@ -36,8 +35,5 @@
       "last 1 chrome version",
       "last 1 firefox version"
     ]
-  },
-  "dependencies": {
-    "-": "^0.0.1"
   }
 }

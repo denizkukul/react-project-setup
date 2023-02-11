@@ -71,30 +71,46 @@ module.exports = {
       filename: 'index.html',
       template: path.resolve(__dirname, '..', 'src', 'index.html'),
       favicon: path.resolve(__dirname, '..', 'public', 'favicon.svg'),
-      // minify: {
-      //   removeComments: true,
-      //   collapseWhitespace: true,
-      //   removeRedundantAttributes: true,
-      //   useShortDoctype: true,
-      //   removeEmptyAttributes: true,
-      //   removeStyleLinkTypeAttributes: true,
-      //   keepClosingSlash: true,
-      //   minifyJS: true,
-      //   minifyCSS: true,
-      //   minifyURLs: true,
-      // },
+      minify: isEnvProduction && {
+        removeComments: true,
+        collapseWhitespace: true,
+        removeRedundantAttributes: true,
+        useShortDoctype: true,
+        removeEmptyAttributes: true,
+        removeStyleLinkTypeAttributes: true,
+        keepClosingSlash: true,
+        minifyJS: true,
+        minifyCSS: true,
+        minifyURLs: true,
+      },
     }),
     isEnvProduction &&
     new MiniCssExtractPlugin({
       filename: isEnvProduction ? 'css/[name].[contenthash:8].css' : isEnvDevelopment && 'css/[name].css',
       chunkFilename: isEnvProduction ? 'css/[name].[contenthash:8].chunk.css' : isEnvDevelopment && 'css/[name].chunk.css'
     }),
-    isEnvDevelopment &&
-    new ForkTsCheckerWebpackPlugin()
+    new ForkTsCheckerWebpackPlugin({
+      async: isEnvDevelopment,
+      typescript: {
+        configOverwrite: {
+          compilerOptions: {
+            sourceMap: true,
+            skipLibCheck: true,
+            inlineSourceMap: false,
+            declarationMap: false,
+            noEmit: true,
+            incremental: true,
+          },
+        },
+        diagnosticOptions: {
+          syntactic: true,
+        },
+        // mode: 'write-references',
+      }
+    })
   ].filter(Boolean),
 
   optimization: {
-    minimize: false,
     minimizer: [
       `...`,
       new CssMinimizerPlugin(),
