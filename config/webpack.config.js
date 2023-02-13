@@ -1,5 +1,7 @@
 const isEnvDevelopment = process.env.NODE_ENV === 'development';
 const isEnvProduction = process.env.NODE_ENV === 'production';
+const isTsWatch = process.env.TS_WATCH === 'true';
+const buildDev = process.env.BUILD_DEV === 'true';
 
 const path = require('path');
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
@@ -13,13 +15,12 @@ module.exports = {
   bail: isEnvProduction,
 
   entry: {
-    index: path.resolve(__dirname, '..', 'src', 'index.js'),
+    index: path.resolve(__dirname, '..', 'src', 'index.tsx'),
     // otherChunk: path.resolve(__dirname, '..', 'src', 'filename.js'),
   },
 
   output: {
     path: path.resolve(__dirname, '..', 'build'),
-    filename: '[name][contenthash].js',
     pathinfo: isEnvDevelopment,
     filename: isEnvProduction ? 'js/[name].[contenthash:8].js' : isEnvDevelopment && 'js/[name].js',
     chunkFilename: isEnvProduction ? 'js/[name].[contenthash:8].chunk.js' : isEnvDevelopment && 'js/[name].chunk.js',
@@ -27,12 +28,12 @@ module.exports = {
     clean: true
   },
 
-  devtool: isEnvProduction ? 'source-map' : isEnvDevelopment && 'cheap-module-source-map',
+  devtool: isEnvDevelopment && 'source-map',
 
   module: {
     rules: [
       {
-        test: /\.(js|ts)$/,
+        test: /\.(js|ts)x?$/,
         loader: 'babel-loader',
         options: require(path.resolve(__dirname, 'babel.config.js'))
       },
@@ -40,7 +41,9 @@ module.exports = {
         test: /\.css$/,
         use: [
           {
-            loader: isEnvDevelopment ? 'style-loader' : isEnvProduction && MiniCssExtractPlugin.loader,
+            loader: (isEnvProduction || buildDev)
+              ? MiniCssExtractPlugin.loader
+              : isEnvDevelopment && 'style-loader',
           },
           {
             loader: 'css-loader',
@@ -67,7 +70,7 @@ module.exports = {
   },
 
   resolve: {
-    extensions: ['.js', '.ts']
+    extensions: ['.js', 'jsx', '.ts', '.tsx']
   },
 
   plugins: [
@@ -88,11 +91,12 @@ module.exports = {
         minifyURLs: true,
       },
     }),
-    isEnvProduction &&
+    (isEnvProduction || buildDev) &&
     new MiniCssExtractPlugin({
       filename: isEnvProduction ? 'css/[name].[contenthash:8].css' : isEnvDevelopment && 'css/[name].css',
       chunkFilename: isEnvProduction ? 'css/[name].[contenthash:8].chunk.css' : isEnvDevelopment && 'css/[name].chunk.css'
     }),
+    isEnvDevelopment && isTsWatch &&
     new ForkTsCheckerWebpackPlugin({
       async: isEnvDevelopment,
       typescript: {
@@ -125,7 +129,7 @@ module.exports = {
     static: {
       directory: path.resolve(__dirname, 'dist')
     },
-    port: 3001,
+    port: 3000,
     open: true,
     hot: true,
     compress: true,
