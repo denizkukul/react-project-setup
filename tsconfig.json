@@ -11,10 +11,11 @@
         "declaration": true,
         "target": "es2015",
         "module": "es2015",
-        "strict": true
+        "strict": true,
+        "jsx": "react-jsx"
     },
     "include": [
-        "src/**/*"
+        "src"
     ],
     "exclude": [
         "node_modules",

@@ -1,8 +1,19 @@
 body {
     background-color: slategrey;
+    min-height: 100vh;
+    color: white;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 30px;
 }
 
-/* 
-.dfp {
-    margin: 0;
-} */
+.app {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+}
+
+button {
+    margin: 20px;
+    padding: 10px 20px;
+}
